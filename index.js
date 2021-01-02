@@ -12,7 +12,7 @@ button.textContent = "Push Me";
 document.body.appendChild(button);
 
 // githubのapiを叩く
-const userId = 'yuki5664';
+const userInfo = 'js-primer-example';
 function fetchUserInfo(userId) {
   fetch(`https://api.github.com/users/${encodeURIComponent(userId)}`)
     .then(response => {
@@ -21,6 +21,20 @@ function fetchUserInfo(userId) {
         console.error('エラーレスポンス', response);
       } else {
         return response.json().then(userInfo => {
+          // アバターの情報用
+          const view = `
+          <h4>${userInfo.name} (@${userInfo.login})</h4>
+          <img src="${userInfo.avatar_url}" alt="${userInfo.login}" height="100">
+          <dl>
+              <dt>Location</dt>
+              <dd>${userInfo.location}</dd>
+              <dt>Repositories</dt>
+              <dd>${userInfo.public_repos}</dd>
+          </dl>
+          `;
+          // HTMLの挿入
+          const result = document.getElementById("result");
+          result.innerHTML = view;
           console.log(userInfo);
         });
       }
@@ -28,3 +42,4 @@ function fetchUserInfo(userId) {
       console.error(error);
     });
 };
+
