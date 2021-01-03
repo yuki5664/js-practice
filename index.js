@@ -1,13 +1,14 @@
-function main() {
-    fetchUserInfo("yuki5664")
-        // ここではJSONオブジェクトで解決されるPromise
-        .then((userInfo) => createView(userInfo))
-        // ここではHTML文字列で解決されるPromise
-        .then((view) => displayView(view))
-        // Promiseチェーンでエラーがあった場合はキャッチされる
-        .catch((error) => {
-            console.error(`エラーが発生しました (${error})`);
-        });
+async function main() {
+    try {
+      const userInfo = await fetchUserInfo("yuki5664");
+      // ここではJSONオブジェクトで解決されるPromise
+      const view = createView(userInfo);
+      // ここではHTML文字列で解決されるPromise
+      displayView(view);
+    } // Promiseチェーンでエラーがあった場合はキャッチされる
+      catch(error) {
+          console.error(`エラーが発生しました (${error})`);
+      }
 }
 
 function fetchUserInfo(userId) {
