@@ -1,14 +1,18 @@
 async function main() {
-    try {
-      const userInfo = await fetchUserInfo("yuki5664");
-      // ここではJSONオブジェクトで解決されるPromise
-      const view = createView(userInfo);
-      // ここではHTML文字列で解決されるPromise
-      displayView(view);
-    } // Promiseチェーンでエラーがあった場合はキャッチされる
-      catch(error) {
-          console.error(`エラーが発生しました (${error})`);
-      }
+        try {  
+        const userId = getUserId();
+        const userInfo = await fetchUserInfo(userId);
+        const userInfoContributions = await fetchUserInfoContributions(userId);
+        console.log(userInfo);
+        console.log(userInfoContributions);
+        // ここではJSONオブジェクトで解決されるPromise
+        const view = createView(userInfo);
+        // ここではHTML文字列で解決されるPromise
+        displayView(view);
+        } // Promiseチェーンでエラーがあった場合はキャッチされる
+        catch(error) {
+            console.error(`エラーが発生しました (${error})`);
+        }
 }
 
 function fetchUserInfo(userId) {
@@ -21,6 +25,22 @@ function fetchUserInfo(userId) {
                 return response.json();
             }
         });
+}
+
+function fetchUserInfoContributions(userId) {
+    return fetch(`https://github.com/users/${encodeURIComponent(userId)}/contributions`)
+        .then(response => {
+            if (!response.ok) {
+                return Promise.reject(new Error(`${response.status}: ${response.statusText}`));
+            } else {
+                // JSONオブジェクトで解決されるPromiseを返す
+                return response.json();
+            }
+        });
+}
+
+function getUserId(userInfo) {
+  return document.getElementById("userId").value;
 }
 
 function createView(userInfo) {
